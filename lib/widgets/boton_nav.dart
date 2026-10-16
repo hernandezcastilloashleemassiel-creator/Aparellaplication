@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/dashboard_screens.dart';
+import '../screens/user_screen.dart';
 
 
 class CustomBottomNavBar extends StatelessWidget {
@@ -17,15 +18,15 @@ class CustomBottomNavBar extends StatelessWidget {
       case 0:
         targetScreen = const DashboardScreen();
         break;
-      // case 1:
-      //  targetScreen = const InventarioScreen(); 
+      //case 1:
+     // targetScreen = const (); 
       //  break; 
       // case 2:
       //  targetScreen = const SalesScreen();
       //  break;
-      // case 3:
-       // targetScreen = const UsersScreen();
-       // break;
+      case 3:
+       targetScreen = const UserScreen(token: 'your_token_here',);
+       break;
       // case 4:
       //   targetScreen = const ProfileScreen();
       //   break;

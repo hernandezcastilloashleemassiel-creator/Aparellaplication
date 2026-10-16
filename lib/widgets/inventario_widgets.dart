@@ -160,7 +160,7 @@ class ProductoCard extends StatelessWidget {
             child: Image.asset(
               producto.imagen,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) =>
+              errorBuilder: (_, _, _) =>
                   const Icon(Icons.image, color: Colors.grey, size: 40),
             ),
           ),
