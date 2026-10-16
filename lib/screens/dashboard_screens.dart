@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/dashboard_widgets.dart';
+import '../widgets/boton_nav.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -182,6 +183,7 @@ class DashboardScreenstate extends State<DashboardScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 0),
     );
-}
+  }
 }
