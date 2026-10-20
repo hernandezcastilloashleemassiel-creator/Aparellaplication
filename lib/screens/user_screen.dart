@@ -1,46 +1,34 @@
 
 import 'package:flutter/material.dart';
-
 import '../widgets/boton_nav.dart';
 import '../data/user_data.dart';
 import '../service/user_service.dart';
 import '../widgets/user_widgets.dart';
-
 class UserScreen extends StatefulWidget {
   final String token;
-
   const UserScreen({
     super.key,
     required this.token,
   });
-
   @override
   State<UserScreen> createState() => _UserScreenState();
 }
-
 class _UserScreenState extends State<UserScreen> {
   late final UsuarioService servicio;
-
   List<Usuario> usuarios = [];
   bool cargando = false;
   bool mostrarFormulario = false;
   String busqueda = '';
   String? error;
-
   @override
   void initState() {
     super.initState();
-
-    // Para el emulador Android de Android Studio.
-    const String baseUrl = 'https://10.0.2.2:7180';
-
+    const String baseUrl = 'http://10.0.2.2:5294/api';
     servicio = UsuarioService(
       UsuarioData(baseUrl),
     );
-
     cargarUsuarios();
   }
-
   Future<void> cargarUsuarios() async {
     if (widget.token.trim().isEmpty) {
       setState(() {
@@ -49,76 +37,88 @@ class _UserScreenState extends State<UserScreen> {
       });
       return;
     }
-
     setState(() {
       cargando = true;
       error = null;
     });
-
     try {
       final resultado =
           await servicio.obtenerUsuarios(widget.token);
-
       if (!mounted) return;
-
       setState(() {
         usuarios = resultado;
         cargando = false;
       });
     } catch (e) {
       if (!mounted) return;
-
       setState(() {
         error = e.toString().replaceFirst('Exception: ', '');
         cargando = false;
       });
     }
   }
-
   List<Usuario> get usuariosFiltrados {
     final texto = busqueda.toLowerCase().trim();
-
+    if (texto.isEmpty) {
+      return usuarios;
+    }
     return usuarios.where((usuario) {
       return usuario.nombre.toLowerCase().contains(texto) ||
           usuario.correo.toLowerCase().contains(texto) ||
           usuario.cargo.toLowerCase().contains(texto);
     }).toList();
   }
-
   void mostrarMensaje(String mensaje) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(mensaje)),
-    );
-  }
-
-  void mostrarDetalles(Usuario usuario) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(usuario.nombre),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Correo: ${usuario.correo}'),
-            const SizedBox(height: 8),
-            Text('Cargo: ${usuario.cargo}'),
-            const SizedBox(height: 8),
-            Text(
-              'Estado: ${usuario.activo ? 'Activo' : 'Inactivo'}',
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cerrar'),
-          ),
-        ],
+      SnackBar(
+        content: Text(mensaje),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
-
+  void mostrarDetalles(Usuario usuario) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(
+            usuario.nombre.isEmpty
+                ? 'Datos del usuario'
+                : usuario.nombre,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Correo: ${usuario.correo}'),
+              const SizedBox(height: 8),
+              Text('Cargo: ${usuario.cargo}'),
+              const SizedBox(height: 8),
+              Text(
+                'Estado: ${usuario.activo ? 'Activo' : 'Inactivo'}',
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void abrirFormulario() {
+    setState(() {
+      mostrarFormulario = true;
+    });
+  }
+  void cerrarFormulario() {
+    setState(() {
+      mostrarFormulario = false;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,18 +134,36 @@ class _UserScreenState extends State<UserScreen> {
         actions: [
           if (!mostrarFormulario)
             IconButton(
-              onPressed: cargarUsuarios,
+              onPressed: cargando ? null : cargarUsuarios,
               icon: const Icon(Icons.refresh),
-              tooltip: 'Actualizar',
+              tooltip: 'Actualizar usuarios',
             ),
         ],
       ),
       body: mostrarFormulario
           ? FormularioUsuario(
               onGuardar: (nombre, correo, cargo) {
+                final nombreLimpio = nombre.trim();
+                final correoLimpio = correo.trim();
+                final cargoLimpio = cargo.trim();
+                if (nombreLimpio.isEmpty ||
+                    correoLimpio.isEmpty ||
+                    cargoLimpio.isEmpty) {
+                  mostrarMensaje(
+                    'Completa todos los campos.',
+                  );
+                  return;
+                }
+                if (!correoLimpio.contains('@') ||
+                    !correoLimpio.contains('.')) {
+                  mostrarMensaje(
+                    'Ingresa un correo válido.',
+                  );
+                  return;
+                }
                 mostrarMensaje(
-                  'Formulario completado. '
-                  'Falta conectar el guardado a la API.',
+                  'Los datos están completos, pero falta '
+                  'conectar el guardado con la API.',
                 );
               },
             )
@@ -155,7 +173,9 @@ class _UserScreenState extends State<UserScreen> {
                 children: [
                   BuscadorUsuarios(
                     onChanged: (texto) {
-                      setState(() => busqueda = texto);
+                      setState(() {
+                        busqueda = texto;
+                      });
                     },
                   ),
                   const SizedBox(height: 16),
@@ -169,34 +189,30 @@ class _UserScreenState extends State<UserScreen> {
           ? FloatingActionButton(
               backgroundColor: rojo,
               foregroundColor: Colors.white,
-              onPressed: () {
-                setState(() => mostrarFormulario = false);
-              },
+              onPressed: cerrarFormulario,
+              tooltip: 'Volver',
               child: const Icon(Icons.arrow_back),
             )
           : FloatingActionButton(
               backgroundColor: verde,
               foregroundColor: Colors.white,
-              onPressed: () {
-                setState(() => mostrarFormulario = true);
-              },
+              onPressed: abrirFormulario,
+              tooltip: 'Agregar usuario',
               child: const Icon(Icons.add),
             ),
       bottomNavigationBar:
           const CustomBottomNavBar(currentIndex: 0),
     );
   }
-
   Widget _contenidoLista() {
-    if (cargando) {
+    if (cargando && usuarios.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(
           color: azulPetroleo,
         ),
       );
     }
-
-    if (error != null) {
+    if (error != null && usuarios.isEmpty) {
       return Center(
         child: SingleChildScrollView(
           child: Column(
@@ -222,61 +238,97 @@ class _UserScreenState extends State<UserScreen> {
         ),
       );
     }
-
     final lista = usuariosFiltrados;
-
     if (lista.isEmpty) {
-      return const Center(
-        child: Text('No se encontraron usuarios.'),
+      return RefreshIndicator(
+        onRefresh: cargarUsuarios,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            const SizedBox(height: 100),
+            Icon(
+              Icons.people_outline,
+              size: 55,
+              color: azulPetroleo.withValues(alpha: 0.6),
+            ),
+            const SizedBox(height: 12),
+            Center(
+              child: Text(
+                busqueda.isEmpty
+                    ? 'No hay usuarios registrados.'
+                    : 'No se encontraron coincidencias.',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       );
     }
-
-    return RefreshIndicator(
-      onRefresh: cargarUsuarios,
-      child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: lista.length,
-        itemBuilder: (context, index) {
-          final usuario = lista[index];
-
-          return Card(
-            color: Colors.white,
-            margin: const EdgeInsets.only(bottom: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-              side: const BorderSide(color: bordeRosa),
+    return Column(
+      children: [
+        if (error != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              'No se pudieron actualizar los datos: $error',
+              style: const TextStyle(color: rojo),
             ),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: beige,
-                child: const Icon(
-                  Icons.person,
-                  color: azulPetroleo,
-                ),
-              ),
-              title: Text(
-                usuario.nombre.isEmpty
-                    ? 'Sin nombre'
-                    : usuario.nombre,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                '${usuario.correo}\n${usuario.cargo}',
-              ),
-              isThreeLine: true,
-              trailing: Icon(
-                usuario.activo
-                    ? Icons.check_circle
-                    : Icons.cancel,
-                color: usuario.activo ? verde : rojo,
-              ),
-              onTap: () => mostrarDetalles(usuario),
+          ),
+        if (cargando)
+          const LinearProgressIndicator(
+            color: azulPetroleo,
+          ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: cargarUsuarios,
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: lista.length,
+              itemBuilder: (context, index) {
+                final usuario = lista[index];
+                return Card(
+                  color: Colors.white,
+                  margin: const EdgeInsets.only(bottom: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    side: const BorderSide(
+                      color: bordeRosa,
+                    ),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: beige,
+                      child: const Icon(
+                        Icons.person,
+                        color: azulPetroleo,
+                      ),
+                    ),
+                    title: Text(
+                      usuario.nombre.isEmpty
+                          ? 'Sin nombre'
+                          : usuario.nombre,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${usuario.correo}\n${usuario.cargo}',
+                    ),
+                    isThreeLine: true,
+                    trailing: Icon(
+                      usuario.activo
+                          ? Icons.check_circle
+                          : Icons.cancel,
+                      color: usuario.activo ? verde : rojo,
+                    ),
+                    onTap: () => mostrarDetalles(usuario),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     );
   }
 }
