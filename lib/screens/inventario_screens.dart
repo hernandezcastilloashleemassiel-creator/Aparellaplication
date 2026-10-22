@@ -59,7 +59,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const BarraBusqueda(
+            BarraBusqueda(
               hint: 'Buscar Producto...',
               onChanged: (v) => setState(() => busqueda = v),
               onFiltro: _abrirFiltros,

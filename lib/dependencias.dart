@@ -7,6 +7,7 @@ import 'service/inventario_service.dart';
 import 'data/factura_data.dart';
 import 'service/factura_service.dart';
 
+
 final getIt = GetIt.instance;
 
 void configurarDependencias() {
@@ -27,4 +28,5 @@ void configurarDependencias() {
   getIt.registerLazySingleton<FacturaService>(
     () => FacturaService(getIt<FacturaData>()),
   );
+
 }
