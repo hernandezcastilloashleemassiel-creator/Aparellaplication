@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/login_widgets.dart';
 import '../service/login_service.dart';
 import '../dependencias.dart';
 import 'dashboard_screens.dart';
@@ -36,24 +35,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(
-    content: Row(
-      children: [
-        const Icon(Icons.error_outline, color: Colors.white),
-        const SizedBox(width: 10),
-        Expanded(child: Text(error)),
-      ],
-    ),
-    backgroundColor: Colors.red.shade600,
-    behavior: SnackBarBehavior.floating,
-    margin: const EdgeInsets.all(16),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-  ),
-);
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.white),
+              const SizedBox(width: 10),
+              Expanded(child: Text(error)),
+            ],
+          ),
+          backgroundColor: Colors.red.shade600,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
       return;
     }
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -74,27 +74,27 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F2F3),
       body: SafeArea(
-      child: Center(
-      child: SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 28.0),
-      child: Form(
-      key: _formKey,
-      child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-           // LOGO
-            const Text(
-              'Apparel',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF1F3A4D),
-              letterSpacing: 0.5,
-              ),
-              ),
-            const SizedBox(height: 24),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // LOGO
+                  const Text(
+                    'Apparel',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1F3A4D),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   const Text(
                     'Bienvenido',
                     textAlign: TextAlign.center,
@@ -114,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 36),
+
                   // CORREO
                   buildLabel('Correo electrónico'),
                   const SizedBox(height: 8),
@@ -138,6 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
+
                   // CONTRASEÑA
                   buildLabel('Contraseña'),
                   const SizedBox(height: 8),
@@ -170,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const SizedBox(height: 40),
+
                   // BOTÓN LOGIN
                   SizedBox(
                     height: 56,
@@ -209,4 +212,70 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+Widget buildLabel(String text) {
+  return Text(
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+      color: Color(0xFF1F3A4D),
+    ),
+  );
+}
+
+InputDecoration inputDecoration({
+  required String hint,
+  required IconData icon,
+  Widget? suffixIcon,
+}) {
+  return InputDecoration(
+    hintText: hint,
+    hintStyle: const TextStyle(color: Color(0xFF9E9E9E)),
+    prefixIcon: Icon(
+      icon,
+      color: const Color(0xFF5C6BC0),
+    ),
+    suffixIcon: suffixIcon,
+    filled: true,
+    fillColor: const Color(0xFFF8F6EE),
+    contentPadding: const EdgeInsets.symmetric(
+      vertical: 16,
+      horizontal: 16,
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(
+        color: Color(0xFFE8E4D8),
+      ),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(
+        color: Color(0xFFE8E4D8),
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(
+        color: Color(0xFF5C6BC0),
+        width: 1.6,
+      ),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(
+        color: Color(0xFFF87171),
+        width: 1.4,
+      ),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(
+        color: Color(0xFFF87171),
+        width: 1.6,
+      ),
+    ),
+  );
 }
