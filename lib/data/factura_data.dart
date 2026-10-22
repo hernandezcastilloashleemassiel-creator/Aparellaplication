@@ -46,12 +46,11 @@ class Factura {
 
 class FacturaData {
   List<Factura> facturas = [];
-
   
 }
-
-String formatoMoneda(double valor) {
-  final texto = valor.toStringAsFixed(valor % 1 == 0 ? 0 : 2);
+ 
+ String formatoMoneda(double valor) {
+   final texto = valor.toStringAsFixed(valor % 1 == 0 ? 0 : 2);
   final partes = texto.split('.');
   final digitos = partes[0];
   final buffer = StringBuffer();
@@ -61,4 +60,11 @@ String formatoMoneda(double valor) {
   }
   final decimales = partes.length > 1 ? '.${partes[1]}' : '';
   return r'C$' + buffer.toString() + decimales;
-}
+ }
+
+
+
+
+
+ 
+ 

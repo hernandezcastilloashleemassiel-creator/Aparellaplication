@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import '../screens/dashboard_screens.dart';
 import '../screens/user_screen.dart';
+=======
+import 'package:app/screens/user_screens.dart';
+import 'package:flutter/material.dart';
+import '../screens/dashboard_screens.dart';
+>>>>>>> Fernanda-Narvaez
 
 
 class CustomBottomNavBar extends StatelessWidget {

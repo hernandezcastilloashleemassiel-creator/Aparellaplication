@@ -8,7 +8,7 @@ import '../widgets/widgets_com.dart';
 
 class InventarioScreen extends StatefulWidget {
   const InventarioScreen({super.key});
-
+  
   @override
   State<InventarioScreen> createState() => _InventarioScreenState();
 }
@@ -16,8 +16,12 @@ class InventarioScreen extends StatefulWidget {
 class _InventarioScreenState extends State<InventarioScreen> {
   final InventarioService servicio = getIt<InventarioService>();
 
+
   int filtro = 0; 
   int orden = 0; 
+
+
+
   String busqueda = '';
 
   Future<void> _abrirFiltros() async {
@@ -80,7 +84,9 @@ class _InventarioScreenState extends State<InventarioScreen> {
                     )
                   : ListView.separated(
                       itemCount: lista.length,
+
                       separatorBuilder: (_, _) => const SizedBox(height: 12),
+
                       itemBuilder: (_, i) {
                         final p = lista[i];
                         final (texto, color) = switch (p.estado) {
