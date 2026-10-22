@@ -22,7 +22,8 @@ class ProfileService {
         return _obtenerDatosDeRespaldo();
       }
     } catch (e) {
-      print('Error conectando a la API, usando datos locales: $e');
+    // ignore: avoid_print
+    print('Error conectando a la API, usando datos locales: $e');
       // Si falla la red por completo, devolvemos datos locales para que la pantalla no falle
       return _obtenerDatosDeRespaldo();
     }
