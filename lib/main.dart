@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screens.dart';
 import 'dependencias.dart';
+
 void main() {
 
   configurarDependencias();
-  dependenciasInventario();
   runApp(const MyApp());
 }
 
