@@ -4,7 +4,7 @@ import 'dependencias.dart';
 void main() {
 
   configurarDependencias();
-  dependenciasInventario();
+  //dependenciasInventario();
   runApp(const MyApp());
 }
 

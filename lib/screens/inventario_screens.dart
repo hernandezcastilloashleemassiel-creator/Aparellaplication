@@ -1,92 +1,119 @@
 import 'package:flutter/material.dart';
-
-import '../data/colores_data.dart';
+import '../data/productos_data.dart';
 import '../dependencias.dart';
 import '../service/inventario_service.dart';
-import '../widgets/inventario_widgets.dart';
+import '../widgets/barra_busq.dart';
+import '../widgets/barra_sup.dart';
+import '../widgets/widgets_com.dart';
 
 class InventarioScreen extends StatefulWidget {
   const InventarioScreen({super.key});
-
+  
   @override
   State<InventarioScreen> createState() => _InventarioScreenState();
 }
 
 class _InventarioScreenState extends State<InventarioScreen> {
-  // Se obtiene el servicio desde get_it
   final InventarioService servicio = getIt<InventarioService>();
 
-  int filtro = 0;
+
+  int filtro = 0; 
+  int orden = 0; 
+
+
+
   String busqueda = '';
+
+  Future<void> _abrirFiltros() async {
+    final r = await mostrarHojaFiltros(
+      context,
+      estados: const ['Todos', 'Stock Bajo', 'Agotados', 'Disponibles'],
+      ordenes: const [
+        'Sin orden',
+        'Nombre (A-Z)',
+        'Stock: menor a mayor',
+        'Stock: mayor a menor',
+      ],
+      estadoActual: filtro,
+      ordenActual: orden,
+    );
+
+    if (r != null) {
+      setState(() {
+        filtro = r.$1;
+        orden = r.$2;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final lista = servicio.filtrar(filtro: filtro, busqueda: busqueda);
-    final resumen = servicio.obtenerResumen();
+    final lista = servicio.filtrar(
+      filtro: filtro,
+      busqueda: busqueda,
+      orden: orden,
+    );
+    
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.arrow_back, color: kAzul, size: 28),
-                  ),
-                  const Text(
-                    'INVENTARIO',
-                    style: TextStyle(
-                      color: kAzul,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
+      backgroundColor: const Color(0xFFF2EBDC),
+      appBar: const BarraSuperior(titulo: 'INVENTARIO', mostrarAtras: false),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            BarraBusqueda(
+              hint: 'Buscar Producto...',
+              onChanged: (v) => setState(() => busqueda = v),
+              onFiltro: _abrirFiltros,
+            ),
+            const SizedBox(height: 12),
+            FiltroChips(
+              etiquetas: const ['Todos', 'Stock Bajo', 'Agotados'],
+              seleccionado: filtro,
+              onSelected: (i) => setState(() => filtro = i),
+            ),
+            const SizedBox(height: 14),
+            
+            const SizedBox(height: 14),
+            Expanded(
+              child: lista.isEmpty
+                  ? const EstadoVacio(
+                      icono: Icons.inventory_2_outlined,
+                      mensaje: 'No hay productos para mostrar',
+                    )
+                  : ListView.separated(
+                      itemCount: lista.length,
+
+                      separatorBuilder: (_, _) => const SizedBox(height: 12),
+
+                      itemBuilder: (_, i) {
+                        final p = lista[i];
+                        final (texto, color) = switch (p.estado) {
+                          Estado.disponible =>
+                            ('Disponible', const Color(0xFF8CE67A)),
+                          Estado.stockBajo =>
+                            ('Stock Bajo', const Color(0xFFF08080)),
+                          Estado.agotado =>
+                            ('Agotado', const Color(0xFFF08080)),
+                        };
+
+                        return TarjetaItem(
+                          leading: const Icon(
+                            Icons.checkroom_outlined,
+                            color: Color(0xFF1F5C7A),
+                            size: 36,
+                          ),
+                          titulo: p.nombre,
+                          subtitulo: 'Stock: ${p.stock}',
+                          etiqueta: texto,
+                          colorEtiqueta: color,
+                          centrado: true,
+                        );
+                      },
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Buscador(onChanged: (v) => setState(() => busqueda = v)),
-              const SizedBox(height: 12),
-              FiltroChips(
-                seleccionado: filtro,
-                onSelected: (i) => setState(() => filtro = i),
-              ),
-              const SizedBox(height: 14),
-              Row(
-                children: [
-                  Expanded(
-                    child: ResumenCard(
-                        titulo: 'Total Productos', valor: '${resumen.total}'),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: ResumenCard(
-                        titulo: 'Stock Bajo', valor: '${resumen.stockBajo}'),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: ResumenCard(
-                      titulo: 'Agotado',
-                      valor: '${resumen.agotados}',
-                      color: kRojo,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
-              Expanded(
-                child: ListView.separated(
-                  itemCount: lista.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (_, i) => ProductoCard(producto: lista[i]),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
