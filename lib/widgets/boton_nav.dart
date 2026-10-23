@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/dashboard_screens.dart';
 import '../screens/user_screen.dart';
+import '../screens/perfil_screens.dart';
 
 
 class CustomBottomNavBar extends StatelessWidget {
@@ -27,9 +28,9 @@ class CustomBottomNavBar extends StatelessWidget {
       case 3:
        targetScreen = const UserScreen(token: 'your_token_here',);
        break;
-      // case 4:
-      //   targetScreen = const ProfileScreen();
-      //   break;
+      case 4:
+      targetScreen = const ProfileScreen();
+      break;
 
       default:
         return;
