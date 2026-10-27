@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../data/productos_data.dart';
-import '../dependencias.dart';
+import '../core/dependencias.dart';
 import '../service/inventario_service.dart';
 import '../widgets/barra_busq.dart';
 import '../widgets/barra_sup.dart';
 import '../widgets/widgets_com.dart';
-
+import '../widgets/boton_nav.dart';
 class InventarioScreen extends StatefulWidget {
   const InventarioScreen({super.key});
   
@@ -116,6 +116,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
     );
   }
 }

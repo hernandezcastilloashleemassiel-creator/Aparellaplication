@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-
 import '../widgets/boton_nav.dart';
 import '../data/user_data.dart';
 import '../service/user_service.dart';
@@ -183,7 +182,7 @@ class _UserScreenState extends State<UserScreen> {
               child: const Icon(Icons.add),
             ),
       bottomNavigationBar:
-          const CustomBottomNavBar(currentIndex: 0),
+          const CustomBottomNavBar(currentIndex: 3),
     );
   }
 
