@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../data/factura_data.dart';
-import '../dependencias.dart';
+import '../core/dependencias.dart';
 import '../service/factura_service.dart';
 import '../widgets/barra_busq.dart';
 import '../widgets/barra_sup.dart';
 import '../widgets/widgets_com.dart';
 import '../widgets/factura_widgets.dart';
 import 'detalle_factura_screens.dart';
+import '../widgets/boton_nav.dart';
 
 class FacturacionScreen extends StatefulWidget {
   const FacturacionScreen({super.key});
@@ -61,7 +62,7 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
         child: Column(
           children: [
             BarraBusqueda(
-              hint: 'Buscar Facturas...',
+              hint: 'Buscar Usuario...',
               onChanged: (v) => setState(() => busqueda = v),
               onFiltro: _abrirFiltros,
             ),
@@ -103,6 +104,7 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
           ],
         ),
       ),
+    bottomNavigationBar: const CustomBottomNavBar(currentIndex: 2),
     );
   }
 }

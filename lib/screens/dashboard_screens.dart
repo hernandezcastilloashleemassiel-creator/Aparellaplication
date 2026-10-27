@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import '../widgets/dashboard_widgets.dart';
 import '../widgets/boton_nav.dart';
+import '../widgets/barra_sup.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => DashboardScreenstate();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class DashboardScreenstate extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen> {
   final String totalStock = '300';
   final String totalUsuarios = '4';
   final String ventasHoy = 'C\$5,000';
@@ -26,29 +27,7 @@ class DashboardScreenstate extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEEF1F3),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF0F4C6B),
-        foregroundColor: Colors.white,
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('APPAREL',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            Text('Dashboard', style: TextStyle(fontSize: 14)),
-          ],
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 12),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: Color(0xFF0F4C6B)),
-            ),
-          ),
-        ],
-      ),
+      appBar: const BarraSuperior(titulo: 'Dashboard', mostrarAtras: false),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -86,7 +65,6 @@ class DashboardScreenstate extends State<DashboardScreen> {
               ],
             ),
             const SizedBox(height: 12),
-
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -115,7 +93,6 @@ class DashboardScreenstate extends State<DashboardScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
             const SizedBox(height: 20),
             const Text('Stock bajo',
                 style: TextStyle(
@@ -154,7 +131,6 @@ class DashboardScreenstate extends State<DashboardScreen> {
               ],
             ),
             const SizedBox(height: 20),
-
             const Text('Últimas ventas',
                 style: TextStyle(
                     fontSize: 16,

@@ -1,32 +1,28 @@
-// ignore_for_file: unused_local_variable
-
-import 'dart:convert';
-import '../data/login_data.dart';
+import '../repositorio/login_repositorio.dart';
 
 class AuthService {
-  final LoginData _data;
+  final AuthRepository _repo;
 
-  AuthService(this._data);
+  AuthService(this._repo);
+
+  /// Devuelve null si el login fue exitoso, o el mensaje de error.
   Future<String?> login(String email, String password) async {
+    if (email.trim().isEmpty || password.isEmpty) {
+      return 'Completa todos los campos';
+    }
+
     try {
-      final respuesta = await _data
-          .login(email, password)
-          .timeout(const Duration(seconds: 10));
+      final usuario = await _repo.login(email.trim(), password);
 
-      if (respuesta.statusCode == 200) {
-        final json = jsonDecode(respuesta.body);
-        final token = json['token'];
-        final usuario = json['userName'];
-        final roles = json['roles'];
-        return null;
+      if (usuario.roles.isEmpty) {
+        await _repo.logout();
+        return 'El usuario no tiene roles asignados';
       }
 
-      if (respuesta.statusCode == 400) {
-        return respuesta.body;
-      }
-
-      return 'Error del servidor (${respuesta.statusCode})';
-    } catch (e) {
+      return null;
+    } on AuthException catch (e) {
+      return e.message;
+    } catch (_) {
       return 'No se pudo conectar con el servidor';
     }
   }

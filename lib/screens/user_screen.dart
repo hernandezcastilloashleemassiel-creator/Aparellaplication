@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/boton_nav.dart';
 import '../data/user_data.dart';
 import '../dependencias.dart';
 import '../service/user_service.dart';
@@ -131,7 +132,8 @@ class _UserScreenState extends State<UserScreen> {
               onPressed: () => setState(() => mostrarFormulario = true),
               child: const Icon(Icons.add),
             ),
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 0),
+      bottomNavigationBar:
+          const CustomBottomNavBar(currentIndex: 0),
     );
   }
 
