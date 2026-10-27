@@ -12,7 +12,7 @@ class DetalleFacturaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2EBDC),
+      backgroundColor: const Color(0xFFEEF2F6),
       appBar: const BarraSuperior(titulo: 'Detalle de Factura'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

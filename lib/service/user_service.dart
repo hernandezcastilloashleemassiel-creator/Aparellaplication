@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import '../data/user_data.dart';
@@ -14,7 +13,7 @@ class UsuarioService {
     if (response.statusCode == 200) {
       final dynamic jsonResponse = jsonDecode(response.body);
 
-      // La API devuelve una lista directamente.
+      
       if (jsonResponse is List) {
         return jsonResponse.map((item) {
           return Usuario.fromJson(
@@ -23,7 +22,7 @@ class UsuarioService {
         }).toList();
       }
 
-      // También admite una lista dentro de la propiedad "data".
+      
       if (jsonResponse is Map<String, dynamic> &&
           jsonResponse['data'] is List) {
         final List<dynamic> datos = jsonResponse['data'];
@@ -44,5 +43,16 @@ class UsuarioService {
       'Error al obtener usuarios: '
       '${response.statusCode} - ${response.body}',
     );
+  }
+
+  
+  List<Usuario> filtrar(List<Usuario> usuarios, String busqueda) {
+    final texto = busqueda.toLowerCase().trim();
+
+    return usuarios.where((u) {
+      return u.nombre.toLowerCase().contains(texto) ||
+          u.correo.toLowerCase().contains(texto) ||
+          u.cargo.toLowerCase().contains(texto);
+    }).toList();
   }
 }

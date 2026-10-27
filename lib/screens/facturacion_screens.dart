@@ -54,14 +54,14 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2EBDC),
+      backgroundColor:const Color(0xFFEEF2F6),
       appBar: const BarraSuperior(titulo: 'Facturacion', mostrarAtras: false),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             BarraBusqueda(
-              hint: 'Buscar Usuario...',
+              hint: 'Buscar Facturas...',
               onChanged: (v) => setState(() => busqueda = v),
               onFiltro: _abrirFiltros,
             ),

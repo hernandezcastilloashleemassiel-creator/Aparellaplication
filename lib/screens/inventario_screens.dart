@@ -56,7 +56,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
     
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2EBDC),
+      backgroundColor:const Color(0xFFEEF2F6),
       appBar: const BarraSuperior(titulo: 'INVENTARIO', mostrarAtras: false),
       body: Padding(
         padding: const EdgeInsets.all(16),
