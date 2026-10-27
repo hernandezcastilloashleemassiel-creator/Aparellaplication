@@ -4,6 +4,7 @@ import '../screens/inventario_screens.dart';
 import '../screens/facturacion_screens.dart';
 import '../screens/perfil_screens.dart';
 import '../screens/user_screen.dart';
+import '../screens/perfil_screens.dart';
 
 
 class CustomBottomNavBar extends StatelessWidget {
@@ -31,8 +32,10 @@ class CustomBottomNavBar extends StatelessWidget {
        targetScreen = const UserScreen(token: '');
        break;
       case 4:
-      targetScreen = const ProfileScreen();
-         break;
+      targetScreen = const ProfileScreen
+       Prueba
+      break;
+
 
       default:
         return;
