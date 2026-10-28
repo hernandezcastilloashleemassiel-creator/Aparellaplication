@@ -55,7 +55,7 @@ class _FacturacionScreenState extends State<FacturacionScreen> {
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2EBDC),
+      backgroundColor: const Color(0xFFF7F2F3),
       appBar: const BarraSuperior(titulo: 'Facturacion', mostrarAtras: false),
       body: Padding(
         padding: const EdgeInsets.all(16),

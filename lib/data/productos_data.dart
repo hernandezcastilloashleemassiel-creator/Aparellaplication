@@ -1,11 +1,13 @@
 enum Estado { disponible, stockBajo, agotado }
 
 class Producto {
+  final int id;
   final String nombre;
   final int stock;
+  final double precio;
   final Estado estado;
 
-  const Producto(this.nombre, this.stock, this.estado);
+  const Producto(this.id, this.nombre, this.stock, this.precio, this.estado);
 }
 
 class ResumenInventario {
@@ -18,6 +20,5 @@ class ResumenInventario {
 
 class InventarioData {
   List<Producto> productos = [];
-
-  
+  ResumenInventario resumen = const ResumenInventario(0, 0, 0);
 }

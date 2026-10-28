@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screens.dart';
 import 'core/dependencias.dart';
-void main() {
 
-  configurarDependencias();
-  //dependenciasInventario();
+void main() {
+  configurarDependencias(); 
+
   runApp(const MyApp());
 }
 
@@ -18,8 +18,4 @@ class MyApp extends StatelessWidget {
       home: LoginScreen(),
     );
   }
-  
-
-
-
 }

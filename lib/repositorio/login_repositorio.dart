@@ -1,7 +1,7 @@
 import 'dart:convert';
 import '../core/token.dart';
 import '../data/login_data.dart';
-import '../modelo/login_model.dart';
+import '../modelo/login_modelo.dart';
 
 class AuthException implements Exception {
   final String message;
