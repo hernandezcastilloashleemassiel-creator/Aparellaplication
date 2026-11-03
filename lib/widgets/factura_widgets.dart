@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../data/factura_data.dart';
-
-/// Texto y color de la etiqueta según el estado de la factura
 (String, Color) estadoVisual(EstadoFactura estado) {
   return switch (estado) {
     EstadoFactura.pagada => ('Pagada', const Color(0xFF8CE67A)),
@@ -10,10 +7,6 @@ import '../data/factura_data.dart';
     EstadoFactura.cancelada => ('Cancelada', const Color(0xFFF08080)),
   };
 }
-
-// ---------------------------------------------------------------
-// ETIQUETA DE ESTADO (Pagada, Pendiente, Cancelada)
-// ---------------------------------------------------------------
 class EtiquetaEstado extends StatelessWidget {
   final String texto;
   final Color color;
@@ -36,10 +29,6 @@ class EtiquetaEstado extends StatelessWidget {
     );
   }
 }
-
-// ---------------------------------------------------------------
-// TARJETA BLANCA (contenedor de cada sección del detalle)
-// ---------------------------------------------------------------
 class TarjetaBlanca extends StatelessWidget {
   final Widget child;
 
@@ -59,10 +48,6 @@ class TarjetaBlanca extends StatelessWidget {
     );
   }
 }
-
-// ---------------------------------------------------------------
-// CABECERA: código, fecha, estado, cliente, método de pago y total
-// ---------------------------------------------------------------
 class CabeceraFactura extends StatelessWidget {
   final Factura factura;
 
@@ -133,10 +118,6 @@ class CabeceraFactura extends StatelessWidget {
     );
   }
 }
-
-// ---------------------------------------------------------------
-// LISTA DE PRODUCTOS DE LA FACTURA
-// ---------------------------------------------------------------
 class ProductosFactura extends StatelessWidget {
   final List<ItemFactura> productos;
 
@@ -190,10 +171,6 @@ class ProductosFactura extends StatelessWidget {
     );
   }
 }
-
-// ---------------------------------------------------------------
-// SUBTOTAL Y TOTAL
-// ---------------------------------------------------------------
 class TotalesFactura extends StatelessWidget {
   final double subtotal;
   final double total;

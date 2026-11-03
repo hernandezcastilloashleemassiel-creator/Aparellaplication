@@ -9,4 +9,8 @@ class TokenStorage {
   Future<String?> read() => _storage.read(key: _key);
 
   Future<void> clear() => _storage.delete(key: _key);
+
+  Future<Object?> getToken() async {
+    return null;
+  }
 }

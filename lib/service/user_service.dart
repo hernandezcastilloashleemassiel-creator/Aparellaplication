@@ -1,48 +1,48 @@
+import '../modelo/user_modelo.dart';
+import '../repositorio/user_repositorio.dart';
 
-import 'dart:convert';
+class UserServicio {
+  final UserRepositorio repositorio;
 
-import '../data/user_data.dart';
+  UserServicio({required this.repositorio});
 
-class UsuarioService {
-  final UsuarioData usuarioData;
+  Future<List<User>> listarUsuarios() {
+    return repositorio.listarUsuarios();
+  }
 
-  UsuarioService(this.usuarioData);
+  Future<User> obtenerUsuario(String id) {
+    return repositorio.obtenerUsuario(id);
+  }
 
-  Future<List<Usuario>> obtenerUsuarios(String token) async {
-    final response = await usuarioData.obtenerUsuarios(token);
-
-    if (response.statusCode == 200) {
-      final dynamic jsonResponse = jsonDecode(response.body);
-
-      // La API devuelve una lista directamente.
-      if (jsonResponse is List) {
-        return jsonResponse.map((item) {
-          return Usuario.fromJson(
-            Map<String, dynamic>.from(item as Map),
-          );
-        }).toList();
-      }
-
-      // También admite una lista dentro de la propiedad "data".
-      if (jsonResponse is Map<String, dynamic> &&
-          jsonResponse['data'] is List) {
-        final List<dynamic> datos = jsonResponse['data'];
-
-        return datos.map((item) {
-          return Usuario.fromJson(
-            Map<String, dynamic>.from(item as Map),
-          );
-        }).toList();
-      }
-
-      throw Exception(
-        'La respuesta de la API no contiene una lista de usuarios.',
-      );
-    }
-
-    throw Exception(
-      'Error al obtener usuarios: '
-      '${response.statusCode} - ${response.body}',
+  Future<bool> registrarUsuario({
+    required String nombre,
+    required String correo,
+    required String password,
+    required String cargo,
+  }) {
+    return repositorio.registrarUsuario(
+      nombre: nombre,
+      correo: correo,
+      password: password,
+      cargo: cargo,
     );
+  }
+
+  Future<bool> actualizarUsuario({
+    required String id,
+    required String nombre,
+    required String correo,
+    required String cargo,
+  }) {
+    return repositorio.actualizarUsuario(
+      id: id,
+      nombre: nombre,
+      correo: correo,
+      cargo: cargo,
+    );
+  }
+
+  Future<bool> eliminarUsuario(String id) {
+    return repositorio.eliminarUsuario(id);
   }
 }

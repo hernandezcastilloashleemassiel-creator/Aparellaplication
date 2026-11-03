@@ -92,10 +92,10 @@ class ResumenCard extends StatelessWidget {
 
 
 class TarjetaItem extends StatelessWidget {
-  final Widget leading; // imagen o ícono de la izquierda
+  final Widget leading; 
   final String titulo;
   final String subtitulo;
-  final String etiqueta; // texto de la etiqueta (Disponible, Pagada...)
+  final String etiqueta; 
   final Color colorEtiqueta;
   final bool centrado;
   final VoidCallback? onTap;
@@ -155,7 +155,7 @@ class TarjetaItem extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 11, fontWeight: FontWeight.w800)),
             ),
-            const Icon(Icons.chevron_right, color: Colors.black87),
+                            
           ],
         ),
       ),

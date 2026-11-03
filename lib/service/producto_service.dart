@@ -12,7 +12,6 @@ class InventarioServicio {
   Future<void> cargar() async {
     final modelos = await _repo.obtenerTodos();
     final productos = modelos
-        .where((m) => m.activo) // quita esta línea si quieres ver también los inactivos
         .map(_aProducto)
         .toList();
 
@@ -65,20 +64,33 @@ class InventarioServicio {
     int stock,
     double precio,
     int categoriaId,
+    String? descripcion,
   ) async {
-    if (nombre.trim().isEmpty) throw Exception('El nombre es obligatorio');
-    if (stock < 0) throw Exception('El stock no puede ser negativo');
-    if (precio <= 0) throw Exception('El precio debe ser mayor a 0');
-    await _repo.crear(
-      ProductoModel(
-        id: 0,
-        categoriaId: categoriaId,
-        nombre: nombre.trim(),
-        precio: precio,
-        stock: stock,
-        activo: true,
-      ),
+    if (nombre.trim().isEmpty) {
+      throw Exception('El nombre es obligatorio');
+    }
+
+    if (stock < 0) {
+      throw Exception('El stock no puede ser negativo');
+    }
+
+    if (precio <= 0) {
+      throw Exception('El precio debe ser mayor a 0');
+    }
+
+    final producto = ProductoModel(
+      id: 0,
+      categoriaId: categoriaId,
+      nombre: nombre.trim(),
+      descripcion: descripcion?.trim() ?? '',
+      precio: precio,
+      stock: stock,
+      activo: true,
     );
+    
+    // Se ejecuta una sola vez para evitar duplicados
+    await _repo.crear(producto);
+
     await cargar();
   }
 

@@ -1,4 +1,4 @@
 class ApiConfig {
-  static const String baseUrl = 'http://10.0.2.2:5294/api';
+  static const String baseUrl = 'https://apparelapi20261031121250-c8gsa5fhbvgaakea.westus-01.azurewebsites.net/api';
   static const Duration timeout = Duration(seconds: 10);
 }

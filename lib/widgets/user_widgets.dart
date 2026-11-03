@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
+import '../modelo/user_modelo.dart';
 
-const Color azulPetroleo = Color(0xFF206582);
-const Color beige = Color(0xFFF5EEDC);
-const Color verde = Color(0xFF68C98A);
-const Color rojo = Color(0xFFE98585);
-const Color bordeRosa = Color(0xFFF1BABA);
-
-class BuscadorUsuarios extends StatelessWidget {
+class UserSearchBar extends StatelessWidget {
   final ValueChanged<String> onChanged;
 
-  const BuscadorUsuarios({
+  const UserSearchBar({
     super.key,
     required this.onChanged,
   });
@@ -19,131 +14,73 @@ class BuscadorUsuarios extends StatelessWidget {
     return TextField(
       onChanged: onChanged,
       decoration: InputDecoration(
-        hintText: 'Buscar por nombre o correo',
-        prefixIcon: const Icon(Icons.search, color: azulPetroleo),
+        hintText: 'Buscar usuario...',
+        prefixIcon: const Icon(Icons.search),
         filled: true,
-        fillColor: beige,
+        fillColor: Colors.white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: bordeRosa),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: bordeRosa),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.black12),
         ),
       ),
     );
   }
 }
 
-class FormularioUsuario extends StatefulWidget {
-  final void Function(String nombre, String correo, String cargo)
-      onGuardar;
+class UserCard extends StatelessWidget {
+  final User user;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const FormularioUsuario({
+  const UserCard({
     super.key,
-    required this.onGuardar,
+    required this.user,
+    required this.onEdit,
+    required this.onDelete,
   });
 
   @override
-  State<FormularioUsuario> createState() => _FormularioUsuarioState();
-}
-
-class _FormularioUsuarioState extends State<FormularioUsuario> {
-  final _formKey = GlobalKey<FormState>();
-  final _nombreController = TextEditingController();
-  final _correoController = TextEditingController();
-  final _cargoController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nombreController.dispose();
-    _correoController.dispose();
-    _cargoController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Agregar usuario',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: azulPetroleo,
-              ),
+    return Card(
+      color: Colors.white,
+      elevation: 2,
+      margin: const EdgeInsets.symmetric(vertical: 7),
+      child: ListTile(
+        leading: const CircleAvatar(
+          backgroundColor: Color(0xFFE8E6FA),
+          child: Icon(
+            Icons.person,
+            color: Color(0xFF225A7C),
+          ),
+        ),
+        title: Text(
+          user.nombreUsuario,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          '${user.correoUsuario}\n${user.cargoUsuario}',
+        ),
+        isThreeLine: true,
+        trailing: PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'editar') {
+              onEdit();
+            } else if (value == 'eliminar') {
+              onDelete();
+            }
+          },
+          itemBuilder: (context) => const [
+            PopupMenuItem(
+              value: 'editar',
+              child: Text('Editar'),
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _nombreController,
-              decoration: const InputDecoration(
-                labelText: 'Nombre',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Ingresá el nombre';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _correoController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                labelText: 'Correo electrónico',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || !value.contains('@')) {
-                  return 'Ingresá un correo válido';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _cargoController,
-              decoration: const InputDecoration(
-                labelText: 'Cargo o rol',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Ingresá el cargo';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: azulPetroleo,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.all(15),
-              ),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  widget.onGuardar(
-                    _nombreController.text.trim(),
-                    _correoController.text.trim(),
-                    _cargoController.text.trim(),
-                  );
-                }
-              },
-              child: const Text('Guardar usuario'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar'),
+            PopupMenuItem(
+              value: 'eliminar',
+              child: Text('Eliminar'),
             ),
           ],
         ),
